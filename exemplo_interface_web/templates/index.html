@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerenciador de Tarefas</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">EXEMPLO FLASK + POO</p>
+      <h1>Gerenciador de Tarefas</h1>
+      <p>Adicione uma tarefa e marque o que foi concluído.</p>
+    </header>
+
+    <form class="nova-tarefa" action="{{ url_for('adicionar_tarefa') }}" method="post">
+      <label for="titulo">Nova tarefa</label>
+      <div class="campos">
+        <input id="titulo" name="titulo" type="text" required maxlength="100" placeholder="Ex.: estudar classes">
+        <button type="submit">Adicionar</button>
+      </div>
+    </form>
+
+    <section aria-labelledby="titulo-lista">
+      <h2 id="titulo-lista">Minhas tarefas</h2>
+      {% if tarefas %}
+        <ul class="tarefas">
+          {% for tarefa in tarefas %}
+            <li class="tarefa {% if tarefa.concluida %}concluida{% endif %}">
+              <span>
+                <strong>{{ tarefa.titulo }}</strong>
+                <small>{{ "Concluída" if tarefa.concluida else "Pendente" }}</small>
+              </span>
+              {% if not tarefa.concluida %}
+                <form action="{{ url_for('concluir_tarefa', indice=loop.index0) }}" method="post">
+                  <button type="submit">Concluir</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="vazio">Nenhuma tarefa cadastrada.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>
